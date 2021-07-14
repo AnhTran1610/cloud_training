@@ -113,10 +113,23 @@ resource "aws_instance" "webserver_instances" {
   subnet_id              = element(aws_subnet.public.*.id, count.index)
   vpc_security_group_ids = [aws_security_group.web_server_sg.id]
   key_name               = var.ssh_key_pair
+  user_data              = file("httpd_install.sh")
 
   tags = {
     Name  = "huyy_webserver_${count.index + 1}"
     Owner = "huyy"
+  }
+
+  connection {
+    user        = "ec2-user"
+    host        = self.public_ip
+    private_key = file("server_key.pem")
+    agent       = true
+  }
+
+  provisioner "file" {
+    source      = "sourceweb"
+    destination = "/home/ec2-user"
   }
 }
 

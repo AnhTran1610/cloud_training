@@ -37,12 +37,69 @@ resource "aws_instance" "web_server" {
   }
 }
 
-resource "aws_vpc" "main" {
+resource "aws_vpc" "main_vpc" {
   cidr_block       = "10.0.0.0/16"
   instance_tenancy = "default"
 
   tags = {
     Name  = "huyy_vpc"
+    Owner = "huyy"
+  }
+}
+
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.main_vpc.id
+
+  tags = {
+    Name  = "huyy_igw"
+    Owner = "huyy"
+  }
+}
+
+resource "aws_route_table" "rtb" {
+  vpc_id = aws_vpc.main_vpc.id
+
+  route {
+    cidr_block = "10.0.1.0/24"
+    gateway_id = aws_internet_gateway.igw.id
+  }
+
+  route {
+    cidr_block = "10.0.0.0/24"
+    gateway_id = aws_internet_gateway.igw.id
+  }
+
+  tags = {
+    Name  = "huyy_rtb"
+    Owner = "huyy"
+  }
+}
+
+# Declare the data source
+data "aws_availability_zones" "available_az" {
+  state = "available"
+}
+
+# e.g. Create subnets in the first two available availability zones
+
+resource "aws_subnet" "primary_subnet" {
+  availability_zone = data.aws_availability_zones.available_az.names[0]
+  vpc_id            = aws_vpc.main_vpc.id
+  cidr_block        = "10.0.0.0/24"
+
+  tags = {
+    Name  = "huyy_primary_subnet"
+    Owner = "huyy"
+  }
+}
+
+resource "aws_subnet" "secondary_subnet" {
+  availability_zone = data.aws_availability_zones.available_az.names[1]
+  vpc_id            = aws_vpc.main_vpc.id
+  cidr_block        = "10.0.1.0/24"
+
+  tags = {
+    Name  = "huyy_secondary_subnet"
     Owner = "huyy"
   }
 }

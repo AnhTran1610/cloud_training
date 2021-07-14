@@ -17,5 +17,5 @@ variable "instance_type" {
 }
 
 variable "ssh_key_pair" {
-    default = "ssh_key_pair"
+  default = "server_key"
 }

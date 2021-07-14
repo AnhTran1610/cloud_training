@@ -1,0 +1,9 @@
+1 - Create VPC
+2 - Create Internet Gateway
+3 - Create Route Table
+4 - Create 2 subnets at 2 seperate AZs (enable auto assign IPv4)
+5 - Assign Route Table into subnets  (Edit route table association)
+6 - Create Security Groups
+7 - Create EC2
+8 - Install HTTP service
+9 - Create Application LoadBalance

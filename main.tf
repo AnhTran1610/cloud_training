@@ -10,7 +10,7 @@ terraform {
 }
 
 provider "aws" {
-  profile = "cloud_user"
+#   profile = "cloud_user"
   region  = "us-east-1"
 }
 
@@ -33,5 +33,6 @@ resource "aws_instance" "web_server" {
   instance_type = "t2.micro"
   tags = {
     Owner = "huyy"
+    Name = "huyy Server"
   }
 }

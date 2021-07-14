@@ -56,25 +56,6 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 
-resource "aws_route_table" "rtb" {
-  vpc_id = aws_vpc.main_vpc.id
-
-  route {
-    cidr_block = "10.0.1.0/24"
-    gateway_id = aws_internet_gateway.igw.id
-  }
-
-  route {
-    cidr_block = "10.0.0.0/24"
-    gateway_id = aws_internet_gateway.igw.id
-  }
-
-  tags = {
-    Name  = "huyy_rtb"
-    Owner = "huyy"
-  }
-}
-
 data "aws_availability_zones" "available_az" {
   state = "available"
 }
@@ -90,6 +71,25 @@ resource "aws_subnet" "public" {
     Owner = "huyy"
   }
 }
+
+resource "aws_route_table" "public_rt" {
+  vpc_id = aws_vpc.main_vpc.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.igw.id
+  }
+  tags = {
+    Name  = "huyy_public_routing_table"
+    Owner = "huyy"
+  }
+}
+
+resource "aws_route_table_association" "selected" {
+  count          = length(var.subnets_cidr)
+  subnet_id      = element(aws_subnet.public.*.id, count.index)
+  route_table_id = aws_route_table.public_rt.id
+}
+
 #############################################
 # OLD TERRAFORM CODE WITHOUT LOOPING METHOD #
 #############################################
@@ -115,6 +115,25 @@ resource "aws_subnet" "public" {
 
 #   tags = {
 #     Name  = "huyy_secondary_subnet"
+#     Owner = "huyy"
+#   }
+# }
+
+# resource "aws_route_table" "rtb" {
+#   vpc_id = aws_vpc.main_vpc.id
+
+#   route {
+#     cidr_block = "10.0.1.0/24"
+#     gateway_id = aws_internet_gateway.igw.id
+#   }
+
+#   route {
+#     cidr_block = "10.0.0.0/24"
+#     gateway_id = aws_internet_gateway.igw.id
+#   }
+
+#   tags = {
+#     Name  = "huyy_rtb"
 #     Owner = "huyy"
 #   }
 # }

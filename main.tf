@@ -28,13 +28,8 @@ data "aws_ami" "amzn2_ami" {
   }
 }
 
-resource "aws_instance" "web_server" {
-  ami           = data.aws_ami.amzn2_ami.id
-  instance_type = "t2.micro"
-  tags = {
-    Owner = "huyy"
-    Name  = "huyy_server"
-  }
+data "aws_availability_zones" "available_az" {
+  state = "available"
 }
 
 resource "aws_vpc" "main_vpc" {
@@ -56,15 +51,11 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 
-data "aws_availability_zones" "available_az" {
-  state = "available"
-}
-
 resource "aws_subnet" "public" {
   count                   = length(var.subnets_cidr)
   vpc_id                  = aws_vpc.main_vpc.id
   cidr_block              = element(var.subnets_cidr, count.index)
-  availability_zone       = data.aws_availability_zones.available_az.names[0]
+  availability_zone       = data.aws_availability_zones.available_az.names[count.index]
   map_public_ip_on_launch = true
   tags = {
     Name  = "huyy_public_subnet_${count.index + 1}"
@@ -89,6 +80,45 @@ resource "aws_route_table_association" "selected" {
   subnet_id      = element(aws_subnet.public.*.id, count.index)
   route_table_id = aws_route_table.public_rt.id
 }
+
+resource "aws_security_group" "web_server_sg" {
+  name        = "web_server_sg"
+  description = "web_server_sg"
+  vpc_id      = aws_vpc.main_vpc.id
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Owner = "huyy"
+    Name  = "web_server_sg"
+  }
+}
+
+resource "aws_instance" "webserver_instances" {
+  count                  = var.instance_count
+  ami                    = data.aws_ami.amzn2_ami.id
+  instance_type          = var.instance_type
+  subnet_id              = element(aws_subnet.public.*.id, count.index)
+  vpc_security_group_ids = [aws_security_group.web_server_sg.id]
+
+  tags = {
+    Name  = "huyy_webserver_${count.index + 1}"
+    Owner = "huyy"
+  }
+}
+
 
 #############################################
 # OLD TERRAFORM CODE WITHOUT LOOPING METHOD #
@@ -135,5 +165,13 @@ resource "aws_route_table_association" "selected" {
 #   tags = {
 #     Name  = "huyy_rtb"
 #     Owner = "huyy"
+#   }
+# }
+# resource "aws_instance" "web_server" {
+#   ami           = data.aws_ami.amzn2_ami.id
+#   instance_type = "t2.micro"
+#   tags = {
+#     Owner = "huyy"
+#     Name  = "huyy_server"
 #   }
 # }

@@ -38,7 +38,7 @@ resource "aws_instance" "web_server" {
 }
 
 resource "aws_vpc" "main_vpc" {
-  cidr_block       = "10.0.0.0/16"
+  cidr_block       = var.vpc_cidr
   instance_tenancy = "default"
 
   tags = {
@@ -75,31 +75,46 @@ resource "aws_route_table" "rtb" {
   }
 }
 
-# Declare the data source
 data "aws_availability_zones" "available_az" {
   state = "available"
 }
 
-# e.g. Create subnets in the first two available availability zones
-
-resource "aws_subnet" "primary_subnet" {
-  availability_zone = data.aws_availability_zones.available_az.names[0]
-  vpc_id            = aws_vpc.main_vpc.id
-  cidr_block        = "10.0.0.0/24"
-
+resource "aws_subnet" "public" {
+  count                   = length(var.subnets_cidr)
+  vpc_id                  = aws_vpc.main_vpc.id
+  cidr_block              = element(var.subnets_cidr, count.index)
+  availability_zone       = data.aws_availability_zones.available_az.names[0]
+  map_public_ip_on_launch = true
   tags = {
-    Name  = "huyy_primary_subnet"
+    Name  = "huyy_public_subnet_${count.index + 1}"
     Owner = "huyy"
   }
 }
+#############################################
+# OLD TERRAFORM CODE WITHOUT LOOPING METHOD #
+#############################################
+# resource "aws_subnet" "primary_subnet" {
+#   availability_zone       = data.aws_availability_zones.available_az.names[0]
+#   map_public_ip_on_launch = true
 
-resource "aws_subnet" "secondary_subnet" {
-  availability_zone = data.aws_availability_zones.available_az.names[1]
-  vpc_id            = aws_vpc.main_vpc.id
-  cidr_block        = "10.0.1.0/24"
+#   vpc_id     = aws_vpc.main_vpc.id
+#   cidr_block = "10.0.0.0/24"
 
-  tags = {
-    Name  = "huyy_secondary_subnet"
-    Owner = "huyy"
-  }
-}
+#   tags = {
+#     Name  = "huyy_primary_subnet"
+#     Owner = "huyy"
+#   }
+# }
+
+# resource "aws_subnet" "secondary_subnet" {
+#   availability_zone       = data.aws_availability_zones.available_az.names[1]
+#   map_public_ip_on_launch = true
+
+#   vpc_id     = aws_vpc.main_vpc.id
+#   cidr_block = "10.0.1.0/24"
+
+#   tags = {
+#     Name  = "huyy_secondary_subnet"
+#     Owner = "huyy"
+#   }
+# }

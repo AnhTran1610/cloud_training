@@ -15,3 +15,7 @@ variable "instance_count" {
 variable "instance_type" {
   default = "t2.micro"
 }
+
+variable "ssh_key_pair" {
+    default = "ssh_key_pair"
+}

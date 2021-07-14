@@ -112,6 +112,7 @@ resource "aws_instance" "webserver_instances" {
   instance_type          = var.instance_type
   subnet_id              = element(aws_subnet.public.*.id, count.index)
   vpc_security_group_ids = [aws_security_group.web_server_sg.id]
+  key_name               = var.ssh_key_pair
 
   tags = {
     Name  = "huyy_webserver_${count.index + 1}"

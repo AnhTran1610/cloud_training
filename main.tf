@@ -10,7 +10,7 @@ terraform {
 }
 
 provider "aws" {
-  #   profile = "cloud_user"
+  profile = "default"
   region = "us-east-1"
 }
 
@@ -99,7 +99,7 @@ resource "aws_instance" "webserver_ahta" {
     user        = "ec2-user"
     host        = self.public_ip
     private_key = file("theanh.pem")
-    agent       = true
+    agent       = false
   }
 
   provisioner "file" {

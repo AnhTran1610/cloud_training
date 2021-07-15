@@ -1,4 +1,4 @@
-# A "simple" cloud diagram used for internal training
+# A "simple" AWS diagram used for internal training
 
 ## Diagram
 
@@ -11,7 +11,7 @@ Still have lots of work to do
 aws ec2 create-key-pair --key-name server_key --query "KeyMaterial" --output text > server_key.pem
 aws ec2 describe-key-pairs --key-name server_key
 ```
-Run Terraform
+## Run Terraform
 ```
 terraform init
 terraform apply

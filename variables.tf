@@ -17,5 +17,5 @@ variable "instance_type" {
 }
 
 variable "ssh_key_pair" {
-  default = "ahta"
+  default = "theanh"
 }

@@ -98,7 +98,7 @@ resource "aws_instance" "webserver_instances" {
   connection {
     user        = "ec2-user"
     host        = self.public_ip
-    private_key = file("ahta.pem")
+    private_key = file("theanh.pem")
     agent       = true
   }
 

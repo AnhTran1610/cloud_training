@@ -1,6 +1,6 @@
 output "Amazon_Linux_2_AMI" {
   description = "Using AMI: "
-  value       = aws_instance.webserver_instances[0].ami
+  value       = aws_instance.webserver_ahta[0].ami
 }
 
 output "Load_Balance_DNS" {

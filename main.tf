@@ -81,7 +81,7 @@ resource "aws_route_table_association" "selected" {
   route_table_id = aws_route_table.public_rt.id
 }
 
-resource "aws_instance" "webserver_instances" {
+resource "aws_instance" "webserver_ahta" {
   count                  = var.instance_count
   ami                    = data.aws_ami.amzn2_ami.id
   instance_type          = var.instance_type

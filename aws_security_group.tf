@@ -18,8 +18,8 @@ resource "aws_security_group" "web_server_sg" {
   }
 
   tags = {
-    Owner = "huyy"
-    Name  = "web_server_sg"
+    Owner = "ahta"
+    Name  = "ahta-web_server_sg"
   }
 }
 
@@ -43,7 +43,7 @@ resource "aws_security_group" "alb_sg" {
   }
 
   tags = {
-    Owner = "huyy"
-    Name  = "alb_sg"
+    Owner = "ahta"
+    Name  = "ahta-alb_sg"
   }
 }

@@ -1,6 +1,6 @@
 variable "subnets_cidr" {
   type    = list(any)
-  default = ["10.0.0.0/24", "10.0.1.0/24"]
+  default = ["10.0.1.0/24", "10.0.2.0/24"]
 }
 
 variable "vpc_cidr" {
@@ -17,5 +17,5 @@ variable "instance_type" {
 }
 
 variable "ssh_key_pair" {
-  default = "server_key"
+  default = "ahta"
 }

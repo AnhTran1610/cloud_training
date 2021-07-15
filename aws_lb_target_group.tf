@@ -10,6 +10,6 @@ resource "aws_lb_target_group" "web_service_group" {
     interval = 10
   }
   tags = {
-    Owner = "huyy"
+    Owner = "ahta"
   }
 }

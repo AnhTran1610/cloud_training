@@ -15,7 +15,7 @@ resource "aws_lb" "web-lb" {
   #   }
 
   tags = {
-    Owner = "huyy"
+    Owner = "ahta"
     Name  = "web_lb"
   }
 }

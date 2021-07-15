@@ -37,8 +37,8 @@ resource "aws_vpc" "main_vpc" {
   instance_tenancy = "default"
 
   tags = {
-    Name  = "huyy_vpc"
-    Owner = "huyy"
+    Name  = "ahta_vpc"
+    Owner = "ahta"
   }
 }
 
@@ -46,8 +46,8 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main_vpc.id
 
   tags = {
-    Name  = "huyy_igw"
-    Owner = "huyy"
+    Name  = "ahta_igw"
+    Owner = "ahta"
   }
 }
 
@@ -58,8 +58,8 @@ resource "aws_subnet" "public" {
   availability_zone       = data.aws_availability_zones.available_az.names[count.index]
   map_public_ip_on_launch = true
   tags = {
-    Name  = "huyy_public_subnet_${count.index + 1}"
-    Owner = "huyy"
+    Name  = "ahta_public_subnet_${count.index + 1}"
+    Owner = "ahta"
   }
 }
 
@@ -70,8 +70,8 @@ resource "aws_route_table" "public_rt" {
     gateway_id = aws_internet_gateway.igw.id
   }
   tags = {
-    Name  = "huyy_public_routing_table"
-    Owner = "huyy"
+    Name  = "ahta_public_routing_table"
+    Owner = "ahta"
   }
 }
 
@@ -91,14 +91,14 @@ resource "aws_instance" "webserver_instances" {
   user_data              = file("httpd_install.sh")
 
   tags = {
-    Name  = "huyy_webserver_${count.index + 1}"
-    Owner = "huyy"
+    Name  = "ahta_webserver_${count.index + 1}"
+    Owner = "ahta"
   }
 
   connection {
     user        = "ec2-user"
     host        = self.public_ip
-    private_key = file("server_key.pem")
+    private_key = file("ahta.pem")
     agent       = true
   }
 

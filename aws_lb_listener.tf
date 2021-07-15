@@ -7,6 +7,6 @@ resource "aws_lb_listener" "webservice" {
     target_group_arn = aws_lb_target_group.web_service_group.arn
   }
   tags = {
-    Owner = "huyy"
+    Owner = "ahta"
   }
 }

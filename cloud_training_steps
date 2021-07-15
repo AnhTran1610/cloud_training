@@ -1,3 +1,8 @@
+Prerequirement:
+aws ec2 create-key-pair --key-name server_key --query "KeyMaterial" --output text > server_key.pem
+aws ec2 describe-key-pairs --key-name server_key
+
+========================================================================
 1 - Create VPC
 2 - Create Internet Gateway
 3 - Create Route Table
